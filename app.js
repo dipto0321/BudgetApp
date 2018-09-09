@@ -75,7 +75,7 @@ var budgetController = (function() {
       if (data.total.inc > 0) {
         data.percentage = Math.round((data.total.exp / data.total.inc) * 100);
       } else {
-        ata.percentage = -1;
+        data.percentage = -1;
       }
     },
 
@@ -138,6 +138,12 @@ var UIController = (function() {
       newHtml = newHtml.replace("%description%", obj.description);
       newHtml = newHtml.replace("%value%", obj.value);
       document.querySelector(element).insertAdjacentHTML("beforeend", newHtml);
+    },
+
+    // Delete list item from UI
+    deleteListItemUI: function(elementId) {
+      var selectedEl = document.getElementById(elementId);
+      selectedEl.parentNode.removeChild(selectedEl);
     },
 
     // Clear All fields after add items
@@ -226,7 +232,9 @@ var controller = (function(budgetCtrl, UICtrl) {
       // Delete the item from data structure
       budgetCtrl.deleteItem(type, ID);
       // Delete that item list from UI
+      UICtrl.deleteListItemUI(itemID);
       // Update budget and budget UI
+      updateBudget();
     } else {
     }
   };
