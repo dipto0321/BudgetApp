@@ -30,8 +30,7 @@ var budgetController = (function() {
       inc: 0
     },
     budget: 0,
-    percentage: -1,
-    month: ""
+    percentage: -1
   };
 
   var calculateTotal = function(type) {
@@ -110,8 +109,7 @@ var budgetController = (function() {
         totalInc: data.total.inc,
         totalExp: data.total.exp,
         budget: data.budget,
-        percentage: data.percentage,
-        monthName: data.month
+        percentage: data.percentage
       };
     },
     testData: function() {
@@ -220,8 +218,6 @@ var UIController = (function() {
       } else {
         document.querySelector(DOMStrings.percentageValue).textContent = "---";
       }
-      document.querySelector(DOMStrings.budgetMonth).textContent =
-        obj.monthName;
     },
 
     // Display Percentages
@@ -244,6 +240,29 @@ var UIController = (function() {
           cur.textContent = "--";
         }
       });
+    },
+
+    // Display Month
+    displayMonth: function() {
+      var monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ];
+      var date = new Date();
+      var year = date.getFullYear();
+      var month = monthNames[date.getMonth()];
+      document.querySelector(DOMStrings.budgetMonth).textContent =
+        month + "-" + year;
     },
 
     // Get Dom Strings
@@ -331,12 +350,12 @@ var controller = (function(budgetCtrl, UICtrl) {
     // Initial Function
     init: function() {
       console.log("App Started...");
+      UICtrl.displayMonth();
       UICtrl.displayBudget({
         totalInc: 0,
         totalExp: 0,
         budget: 0,
-        percentage: -1,
-        monthName: ""
+        percentage: -1
       });
       setupEventListner();
     }
