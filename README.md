@@ -12,3 +12,5 @@ A web based budget calculating app using HTML5, CSS3 and Javascript. This is a l
 ![Shot-2](screenshots/shot2.jpg)
 ![Shot-3](screenshots/shot3.jpg)
 ![Shot-4](screenshots/shot4.jpg)
+![Shot-5](screenshots/shot5.jpg)
+![Shot-6](screenshots/shot6.jpg)
