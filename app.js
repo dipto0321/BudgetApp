@@ -152,6 +152,13 @@ var UIController = (function() {
     return (type === "exp" ? "-" : "+") + " " + int + "." + dec;
   };
 
+  // Hack for convert a nodelist to array
+  var nodeListForEach = function(list, callback) {
+    for (var i = 0; i < list.length; i++) {
+      callback(list[i], i);
+    }
+  };
+
   return {
     // Get Input Value from UI
     getInput: function() {
@@ -226,13 +233,6 @@ var UIController = (function() {
         DOMStrings.expensesPercentageLabel
       );
 
-      // Hack for convert a nodelist to array
-      var nodeListForEach = function(list, callback) {
-        for (var i = 0; i < list.length; i++) {
-          callback(list[i], i);
-        }
-      };
-
       nodeListForEach(fields, function(cur, index) {
         if (percen[index] > 0) {
           cur.textContent = percen[index] + "%";
@@ -265,6 +265,20 @@ var UIController = (function() {
         month + "-" + year;
     },
 
+    changedType: function() {
+      var fields = document.querySelectorAll(
+        DOMStrings.inputType +
+          "," +
+          DOMStrings.inputDesciption +
+          "," +
+          DOMStrings.inputValue
+      );
+      nodeListForEach(fields, function(cur, index) {
+        cur.classList.toggle("red-focus");
+      });
+      document.querySelector(DOMStrings.addBTN).classList.toggle("red");
+    },
+
     // Get Dom Strings
     getDomStrings: function() {
       return DOMStrings;
@@ -287,6 +301,9 @@ var controller = (function(budgetCtrl, UICtrl) {
     document
       .querySelector(DOM.container)
       .addEventListener("click", ctrlDelItems);
+    document
+      .querySelector(DOM.inputType)
+      .addEventListener("change", UICtrl.changedType);
   };
   // Update Budget
   var updateBudget = function() {
