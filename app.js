@@ -136,6 +136,24 @@ var UIController = (function() {
     container: ".container",
     expensesPercentageLabel: ".item__percentage"
   };
+
+  // Number Formatting of app
+  var formateNumber = function(num, type) {
+    var numSplit;
+    num = Math.abs(num).toFixed(2);
+    numSplit = num.split(".");
+    int = numSplit[0];
+    if (int.length > 3) {
+      int =
+        int.substr(0, int.length - 3) +
+        "," +
+        int.substr(int.length - 3, int.length);
+    }
+    dec = numSplit[1];
+
+    return (type === "exp" ? "-" : "+") + " " + int + "." + dec;
+  };
+
   return {
     // Get Input Value from UI
     getInput: function() {
@@ -153,16 +171,16 @@ var UIController = (function() {
       if (type === "inc") {
         element = DOMStrings.incomeContainer;
         Html =
-          '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">+ %value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+          '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       } else if (type === "exp") {
         element = DOMStrings.expensesContainer;
         Html =
-          '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">- %value%</div><div class="item__percentage"></div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+          '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage"></div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
       //Replace with real items value
       newHtml = Html.replace("%id%", obj.id);
       newHtml = newHtml.replace("%description%", obj.description);
-      newHtml = newHtml.replace("%value%", obj.value);
+      newHtml = newHtml.replace("%value%", formateNumber(obj.value, type));
       document.querySelector(element).insertAdjacentHTML("beforeend", newHtml);
     },
 
@@ -187,10 +205,15 @@ var UIController = (function() {
 
     // Display Budget on UI
     displayBudget: function(obj) {
-      document.querySelector(DOMStrings.budgetValue).textContent = obj.budget;
-      document.querySelector(DOMStrings.incomeValue).textContent = obj.totalInc;
-      document.querySelector(DOMStrings.expenseValue).textContent =
-        obj.totalExp;
+      var type = obj.budget > 0 ? "inc" : "exp";
+      document.querySelector(DOMStrings.budgetValue).textContent =
+        obj.budget === 0 ? "0.00" : formateNumber(obj.budget, type);
+      document.querySelector(
+        DOMStrings.incomeValue
+      ).textContent = formateNumber(obj.totalInc, "inc");
+      document.querySelector(
+        DOMStrings.expenseValue
+      ).textContent = formateNumber(obj.totalExp, "exp");
       if (obj.percentage > 0) {
         document.querySelector(DOMStrings.percentageValue).textContent =
           obj.percentage + "%";
@@ -222,6 +245,7 @@ var UIController = (function() {
         }
       });
     },
+
     // Get Dom Strings
     getDomStrings: function() {
       return DOMStrings;
